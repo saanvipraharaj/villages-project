@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log("DB:", process.env.DATABASE_URL ? "FOUND" : "MISSING");
 
 const express = require('express');
 const { Pool } = require('pg');
