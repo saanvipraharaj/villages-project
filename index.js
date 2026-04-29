@@ -11,11 +11,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Database connection
+// Database connection (SAFE VERSION)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: process.env.DATABASE_URL
+    ? { rejectUnauthorized: false }
+    : false
 });
+
+// Prevent silent crash
+pool.connect()
+  .then(() => console.log("Database connected successfully"))
+  .catch(err => console.error("Database connection error:", err.message));
 
 // Root route
 app.get('/', (req, res) => {
@@ -98,7 +105,7 @@ app.get('/villages', async (req, res) => {
   }
 });
 
-// SEARCH (optimized)
+// SEARCH
 app.get('/search', async (req, res) => {
   const { q } = req.query;
 
@@ -127,5 +134,9 @@ app.get('/search', async (req, res) => {
   }
 });
 
-// IMPORTANT for Vercel
-module.exports = app;
+// START SERVER (IMPORTANT FOR RENDER)
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
