@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-const API = "http://localhost:3000"; // change after deployment
+const API = "https://villages-project.onrender.com";
 
 function App() {
   const [states, setStates] = useState([]);
